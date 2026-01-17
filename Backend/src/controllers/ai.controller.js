@@ -3,15 +3,12 @@ import Message from "../models/message.model.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 
-// The AI assistant's ID (we'll create this user in the database)
 const AI_USER_ID = process.env.AI_USER_ID || "ai-assistant";
 
 export const setupAIUser = async () => {
   try {
-    // Check if AI user exists
     let aiUser = await User.findOne({ email: "ai@chatmate.com" });
 
-    // If not, create it
     if (!aiUser) {
       aiUser = new User({
         email: "ai@chatmate.com",
@@ -21,7 +18,7 @@ export const setupAIUser = async () => {
           10
         ),
         profilePic:
-          "./ChatAi.jpg", // Add an AI avatar image to your public folder
+          "./ChatAi.png",
       });
       await aiUser.save();
       console.log("AI assistant account created with ID:", aiUser._id);
@@ -39,13 +36,11 @@ export const sendMessageToAI = async (req, res) => {
     const { text } = req.body;
     const senderId = req.user._id;
 
-    // Get or create AI user
     const aiUser = await User.findOne({ email: "ai@chatmate.com" });
     if (!aiUser) {
       return res.status(500).json({ error: "AI assistant not configured" });
     }
 
-    // Save user message
     const userMessage = new Message({
       senderId,
       receiverId: aiUser._id,
@@ -53,10 +48,8 @@ export const sendMessageToAI = async (req, res) => {
     });
     await userMessage.save();
 
-    // Generate AI response
     const aiResponse = await generateAIResponse(text);
 
-    // Save AI response
     const aiMessage = new Message({
       senderId: aiUser._id,
       receiverId: senderId,
@@ -64,7 +57,6 @@ export const sendMessageToAI = async (req, res) => {
     });
     await aiMessage.save();
 
-    // Return both messages
     res.status(200).json({
       userMessage,
       aiMessage,
