@@ -119,7 +119,6 @@ const MessageInput = () => {
       const finalMaxSize = 5 * 1024 * 1024;
       
       if (compressedSize > finalMaxSize) {
-        // Try with lower quality
         const moreCompressedDataUrl = await compressImage(file, 1280, 720, 0.6);
         const moreCompressedSize = (moreCompressedDataUrl.length * 0.75);
         

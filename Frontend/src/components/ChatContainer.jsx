@@ -115,14 +115,14 @@ const ChatContainer = () => {
                       <Markdown 
                         remarkPlugins={[remarkGfm]}
                         components={{
-                          p: ({node, ...props}) => <div {...props} />, // Replace p with div
+                          p: ({node, ...props}) => <div {...props} />, 
                           code({node, inline, className, children, ...props}) {
                             return inline ? (
                               <code className="bg-neutral rounded px-1 py-0.5 text-sm text-white">
                                 {children}
                               </code>
                             ) : (
-                              <div className="my-2"> {/* Wrap pre in div instead of p */}
+                              <div className="my-2">
                                 <pre className="bg-neutral rounded p-2 overflow-x-auto text-white">
                                   <code className={className} {...props}>
                                     {children}
